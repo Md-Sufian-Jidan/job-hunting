@@ -3,7 +3,10 @@ import logo from '../assets/images/logo.png'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../Context/AuthProvider'
 const Navbar = () => {
-    const { user, logOut } = useContext(AuthContext)
+    const { user, logOut } = useContext(AuthContext);
+    const  handleLogOut = async() => {
+        logOut()
+    } 
     return (
         <div className='navbar bg-base-100 shadow-sm container px-4 mx-auto'>
             <div className='flex-1'>
@@ -17,7 +20,6 @@ const Navbar = () => {
                     <li>
                         <Link to='/'>Home</Link>
                     </li>
-
                     {!user && (
                         <li>
                             <Link to='/login'>Login</Link>
@@ -60,7 +62,7 @@ const Navbar = () => {
                             </li>
                             <li className='mt-2'>
                                 <button
-                                    onClick={logOut}
+                                    onClick={handleLogOut}
                                     className='bg-gray-200 block text-center'
                                 >
                                     Logout
