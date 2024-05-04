@@ -21,7 +21,7 @@ const AuthProvider = ({ children }) => {
     // google login
     const googleProvider = new GoogleAuthProvider()
     const googleLogin = () => {
-        setIsLoading(true)
+    setIsLoading(true)
         return signInWithPopup(auth, googleProvider)
     };
     //logOut
@@ -47,7 +47,7 @@ const AuthProvider = ({ children }) => {
         }
     },[]);
 
-    const userInfo = { user, isLoading, createUser, signIn, googleLogin,logOut, updateUserProfile }
+    const userInfo = { user, isLoading, createUser, signIn, googleLogin,logOut, updateUserProfile, setUser }
     return (
         <AuthContext.Provider value={userInfo}>
             {children}

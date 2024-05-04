@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 import { AuthContext } from '../../Context/AuthProvider'
 const Registration = () => {
   const navigate = useNavigate()
-  const { signInWithGoogle, createUser, updateUserProfile, user, setUser } = useContext(AuthContext)
+  const { googleLogin, createUser, updateUserProfile, user, setUser } = useContext(AuthContext)
 
   const handleSignUp = async e => {
     e.preventDefault()
@@ -22,19 +22,19 @@ const Registration = () => {
       console.log(result)
       await updateUserProfile(name, photo)
       setUser({ ...user, photoURL: photo, displayName: name })
+      toast.success('Sign up Successful');
       navigate('/')
-      toast.success('Sign up Successful')
     } catch (err) {
       console.log(err)
       toast.error(err?.message)
     }
   }
 
-  // Google Signin
+  // Google Sign in
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle()
-      toast.success('Signin Successful')
+      await googleLogin()
+      toast.success('Sign in Successful')
       navigate('/')
     } catch (err) {
       console.log(err)
@@ -78,7 +78,6 @@ const Registration = () => {
                 />
               </svg>
             </div>
-
             <span className='w-5/6 px-4 py-3 font-bold text-center'>
               Sign in with Google
             </span>

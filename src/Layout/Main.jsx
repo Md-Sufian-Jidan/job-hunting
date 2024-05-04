@@ -6,7 +6,10 @@ const Main = () => {
     return (
         <div>
             <Navbar />
-            <Outlet />
+            <div className="min-h-[calc(100vh-306px)]">
+                {/* remember don't give any gap in calc */}
+                <Outlet />
+            </div>
             <Footer />
         </div>
     );

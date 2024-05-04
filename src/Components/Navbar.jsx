@@ -1,12 +1,23 @@
 import { useContext } from 'react'
 import logo from '../assets/images/logo.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../Context/AuthProvider'
+import toast from 'react-hot-toast'
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext);
-    const  handleLogOut = async() => {
-        logOut()
-    } 
+    const navigate = useNavigate();
+    const handleLogOut = async () => {
+        try {
+            const result = await logOut()
+            console.log(result);
+            toast.success('User Log Out successfully')
+            navigate('/')
+        }
+        catch (err) {
+            console.log(err);
+            toast.error(err?.message)
+        }
+    }
     return (
         <div className='navbar bg-base-100 shadow-sm container px-4 mx-auto'>
             <div className='flex-1'>
