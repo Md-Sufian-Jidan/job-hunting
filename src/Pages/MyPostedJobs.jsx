@@ -13,17 +13,13 @@ const MyPostedJobs = () => {
     }, [user])
 
     const getData = async () => {
-        const { data } = await axios(
-            `${import.meta.env.VITE_API_URL}/jobs/${user?.email}`
-        )
-        setJobs(data)
+        const { data } = await axios(`${import.meta.env.VITE_API_URL}/jobs/${user?.email}`);
+        setJobs(data);
     }
 
     const handleDelete = async id => {
         try {
-            const { data } = await axios.delete(
-                `${import.meta.env.VITE_API_URL}/job/${id}`
-            )
+            const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/job/${id}`)
             console.log(data)
             toast.success('Delete Successful')
 
@@ -113,9 +109,11 @@ const MyPostedJobs = () => {
                                                     <p
                                                         className={`px-3 py-1 ${job.category === 'Web Development' &&
                                                             'text-blue-500 bg-blue-100/60'
-                                                            } ${job.category === 'Graphics Design' &&
+                                                            }
+                                                             ${job.category === 'Graphics Design' &&
                                                             'text-emerald-500 bg-emerald-100/60'
-                                                            } ${job.category === 'Digital Marketing' &&
+                                                            }
+                                                             ${job.category === 'Digital Marketing' &&
                                                             'text-pink-500 bg-pink-100/60'
                                                             } text-xs  rounded-full`}
                                                     >
