@@ -9,6 +9,7 @@ import JobDetails from "../Pages/JobDetails";
 import AddJob from "../Pages/AddJob";
 import ErrorPage from "../Pages/ErrorPage";
 import MyPostedJobs from "../Pages/MyPostedJobs";
+import UpdateJob from "../Pages/UpdateJob";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +33,11 @@ const router = createBrowserRouter([
             {
                 path: '/job/:id',
                 element: <JobDetails />,
+                loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/job/${params.id}`)
+            },
+            {
+                path: '/update/:id',
+                element: <UpdateJob />,
                 loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/job/${params.id}`)
             },
             {

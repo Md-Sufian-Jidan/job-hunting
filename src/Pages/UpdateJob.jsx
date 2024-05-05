@@ -4,14 +4,15 @@ import 'react-datepicker/dist/react-datepicker.css'
 import axios from 'axios'
 import { useLoaderData, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { AuthContext } from '../providers/AuthProvider'
+import { AuthContext } from '../Context/AuthProvider'
 
 const UpdateJob = () => {
-    const navigate = useNavigate()
-    const job = useLoaderData()
+    const { user } = useContext(AuthContext);
+    const job = useLoaderData();
     const { _id, job_title, deadline, category, min_price, max_price, description, } = job || {}
-    const { user } = useContext(AuthContext)
-    const [startDate, setStartDate] = useState(new Date(deadline) || new Date())
+    const navigate = useNavigate()
+    const [startDate, setStartDate] = useState(new Date(deadline) || new Date());
+
     const handleFormSubmit = async e => {
         e.preventDefault()
         const form = e.target
@@ -43,10 +44,7 @@ const UpdateJob = () => {
     return (
         <div className='flex justify-center items-center min-h-[calc(100vh-306px)] my-12'>
             <section className=' p-2 md:p-6 mx-auto bg-white rounded-md shadow-md '>
-                <h2 className='text-lg font-semibold text-gray-700 capitalize '>
-                    Update a Job
-                </h2>
-
+                <h2 className='text-lg font-semibold text-gray-700 capitalize '>Update a Job</h2>
                 <form onSubmit={handleFormSubmit}>
                     <div className='grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2'>
                         <div>
