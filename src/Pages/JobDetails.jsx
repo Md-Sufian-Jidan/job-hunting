@@ -6,48 +6,48 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { AuthContext } from '../Context/AuthProvider'
 const JobDetails = () => {
-    const [startDate, setStartDate] = useState(new Date())
+    const [startDate, setStartDate] = useState(new Date());
     const { user } = useContext(AuthContext);
-    const job = useLoaderData()
-    const { _id, job_title, description, min_price, max_price, category, deadline, buyer } = job || {}
+    const job = useLoaderData();
+    // console.log(job.buyer_email);
+    const { _id, job_title, description, min_price, max_price, category, deadline, buyer_email } = job || {}
 
     const handleFormSubmission = async e => {
         e.preventDefault()
-        if (user?.email === buyer?.email)
+        if (user?.email === buyer_email)
             return toast.error('Action not permitted!')
-        const form = e.target
-        const jobId = _id
-        const price = parseFloat(form.price.value)
+        const form = e.target;
+        const jobId = _id;
+        const price = parseFloat(form.price.value);
         if (price < parseFloat(min_price))
             return toast.error('Offer more or at least equal to Minimum Price.')
-        const comment = form.comment.value
-        const deadline = startDate
-        const email = user?.email
-        // const buyer_email = buyer_email
-        const status = 'Pending'
+        const comment = form.comment.value;
+        const deadline = startDate;
+        const buyerEmail = buyer_email;
+        const email = user?.email;
+        const status = 'Pending';
 
         const bidData = {
-            jobId, price, deadline, comment, job_title, category, email, buyer_email: buyer?.email, status, buyer,
+            jobId, price, deadline, comment, job_title, category, email, status, buyerEmail,
         }
+        console.log(bidData);
         try {
-            const { data } = await axios.post(
-                `${import.meta.env.VITE_API_URL}/bid`,
-                bidData
-            )
-            console.log(data)
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/bid`, bidData)
+            console.log(data);
+            toast.success('Bid Data Save Successfully');
         } catch (err) {
-            console.log(err)
-            console.log('Hi, i am error', err.message)
+            console.log(err);
+            console.log('Hi, i am error', err.message);
+            toast.error(err.message);
         }
     }
 
     return (
-        <div className='flex flex-col md:flex-row justify-around gap-5  items-center min-h-[calc(100vh-306px)] md:max-w-screen-xl mx-auto '>
+        <div className='flex flex-col md:flex-row justify-around gap-5  items-center min-h-[calc(100vh-306px)] max-w-6xl mx-auto my-5'>
             {/* Job Details */}
             <div className='flex-1  px-4 py-7 bg-white rounded-md shadow-md md:min-h-[350px]'>
                 <div className='flex items-center justify-between'>
-                    <span className='text-sm font-light text-gray-800 '>
-                        Deadline: {new Date(deadline).toLocaleDateString()}
+                    <span className='text-sm font-light text-gray-800 '>Deadline: {new Date(deadline).toLocaleDateString()}
                     </span>
                     <span className='px-4 py-1 text-xs text-blue-800 uppercase bg-blue-200 rounded-full '>
                         {category}
@@ -60,20 +60,14 @@ const JobDetails = () => {
                     </h1>
 
                     <p className='mt-2 text-lg text-gray-600 '>{description}</p>
-                    <p className='mt-6 text-sm font-bold text-gray-600 '>
-                        Buyer Details:
-                    </p>
+                    <p className='mt-6 text-sm font-bold text-gray-600 '>Buyer Details:</p>
                     <div className='flex items-center gap-5'>
                         <div>
-                            <p className='mt-2 text-sm  text-gray-600 '>
-                                Name: {buyer?.name}
-                            </p>
-                            <p className='mt-2 text-sm  text-gray-600 '>
-                                Email: {buyer?.email}
-                            </p>
+                            <p className='mt-2 text-sm  text-gray-600 '>Name : </p>
+                            <p className='mt-2 text-sm  text-gray-600 '>Email : {buyer_email}</p>
                         </div>
                         <div className='rounded-full object-cover overflow-hidden w-14 h-14'>
-                            <img src={buyer?.photo} alt='' />
+                            <img src="" alt='' />
                         </div>
                     </div>
                     <p className='mt-6 text-lg font-bold text-gray-600 '>
@@ -86,7 +80,6 @@ const JobDetails = () => {
                 <h2 className='text-lg font-semibold text-gray-700 capitalize '>
                     Place A Bid
                 </h2>
-
                 <form onSubmit={handleFormSubmission}>
                     <div className='grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2'>
                         <div>
