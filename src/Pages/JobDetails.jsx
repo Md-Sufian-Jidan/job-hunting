@@ -10,11 +10,11 @@ const JobDetails = () => {
     const { user } = useContext(AuthContext);
     const job = useLoaderData();
     // console.log(job.buyer_email);
-    const { _id, job_title, description, min_price, max_price, category, deadline, buyer_email } = job || {}
+    const { _id, job_title, description, min_price, max_price, category, deadline, buyer } = job || {}
 
     const handleFormSubmission = async e => {
         e.preventDefault()
-        if (user?.email === buyer_email)
+        if (user?.email === buyer?.email)
             return toast.error('Action not permitted!')
         const form = e.target;
         const jobId = _id;
@@ -23,7 +23,7 @@ const JobDetails = () => {
             return toast.error('Offer more or at least equal to Minimum Price.')
         const comment = form.comment.value;
         const deadline = startDate;
-        const buyerEmail = buyer_email;
+        const buyerEmail = buyer?.email;
         const email = user?.email;
         const status = 'Pending';
 
@@ -59,15 +59,15 @@ const JobDetails = () => {
                         {job_title}
                     </h1>
 
-                    <p className='mt-2 text-lg text-gray-600 '>{description}</p>
+                    <p className='mt-2 text-gray-600 '>{description}</p>
                     <p className='mt-6 text-sm font-bold text-gray-600 '>Buyer Details:</p>
                     <div className='flex items-center gap-5'>
                         <div>
-                            <p className='mt-2 text-sm  text-gray-600 '>Name : </p>
-                            <p className='mt-2 text-sm  text-gray-600 '>Email : {buyer_email}</p>
+                            <p className='mt-2 text-sm  text-gray-600 '>Name : {buyer?.name}</p>
+                            <p className='mt-2 text-sm  text-gray-600 '>Email : {buyer?.email}</p>
                         </div>
                         <div className='rounded-full object-cover overflow-hidden w-14 h-14'>
-                            <img src="" alt='' />
+                            <img src={buyer?.photo} alt='' />
                         </div>
                     </div>
                     <p className='mt-6 text-lg font-bold text-gray-600 '>
