@@ -82,7 +82,6 @@ const Login = () => {
                                 />
                             </svg>
                         </div>
-
                         <span className='w-5/6 px-4 py-3 font-bold text-center'>
                             Sign in with Google
                         </span>

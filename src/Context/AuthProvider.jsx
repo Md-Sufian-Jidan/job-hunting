@@ -21,7 +21,7 @@ const AuthProvider = ({ children }) => {
     // google login
     const googleProvider = new GoogleAuthProvider()
     const googleLogin = () => {
-    setIsLoading(true)
+        setIsLoading(true)
         return signInWithPopup(auth, googleProvider)
     };
     //logOut
@@ -32,10 +32,10 @@ const AuthProvider = ({ children }) => {
 
     const updateUserProfile = (name, photo) => {
         return updateProfile(auth.currentUser, {
-          displayName: name,
-          photoURL: photo,
+            displayName: name,
+            photoURL: photo,
         })
-      }
+    }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
@@ -45,9 +45,9 @@ const AuthProvider = ({ children }) => {
         return () => {
             unsubscribe();
         }
-    },[]);
+    }, []);
 
-    const userInfo = { user, isLoading, createUser, signIn, googleLogin,logOut, updateUserProfile, setUser }
+    const userInfo = { user, isLoading, createUser, signIn, googleLogin, logOut, updateUserProfile, setUser }
     return (
         <AuthContext.Provider value={userInfo}>
             {children}
@@ -57,5 +57,5 @@ const AuthProvider = ({ children }) => {
 
 AuthProvider.propTypes = {
     children: PropTypes.node.isRequired
-  };
+};
 export default AuthProvider;
