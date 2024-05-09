@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
 // import toast from 'react-hot-toast'
-import { AuthContext } from '../Context/AuthProvider'
+import useAuth from '../Hooks/useAuth'
 
 const BidRequests = () => {
-    const { user, isLoading } = useContext(AuthContext)
+    // const { user, isLoading } = useContext(AuthContext)
+    const { user, isLoading } = useAuth();
     if (isLoading) {
         return <p className='text-5xl text-center'>Loading...</p>
     }
@@ -163,7 +163,7 @@ const BidRequests = () => {
                                                 </td>
                                                 <td className='px-4 py-4 text-sm whitespace-nowrap'>
                                                     <div className='flex items-center gap-x-6'>
-                                                        {/* accept button : In Progress  */}
+                                                        {/* Accept button : In Progress  */}
                                                         <button
                                                             onClick={() => handleStatus(bid._id, bid.status, 'In Progress')}
                                                             disabled={bid.status === 'Complete'}

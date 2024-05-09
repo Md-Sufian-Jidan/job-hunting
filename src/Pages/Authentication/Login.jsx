@@ -1,15 +1,16 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import bgImg from '../../assets/images/login.jpg'
 import logo from '../../assets/images/logo.png'
-import { useContext, useEffect } from 'react'
+import { useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { AuthContext } from '../../Context/AuthProvider'
+import axios from 'axios'
+import useAuth from '../../Hooks/useAuth'
 const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state || '/';
-    const { signIn, googleLogin, user, isLoading } = useContext(AuthContext);
-    if(isLoading) {
+    const { signIn, googleLogin, user, isLoading } = useAuth();
+    if (isLoading) {
         return <p className='text-5xl text-center'>Loading...</p>
     }
     useEffect(() => {
@@ -18,19 +19,26 @@ const Login = () => {
         }
     }, [user])
 
-    // Google Signin
+    // Google Sign in
     const handleGoogleSignIn = async () => {
         try {
-            await googleLogin()
+            const result = await googleLogin()
+            // console.log(result.user);
+            //2. get token from server using email
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, { email: result.user?.email },
+                { withCredentials: true })
+            if (result.user) {
+                navigate(from, { replace: true })
+            }
+            console.log(data);
             toast.success('Sign in Successful')
-            navigate(from, { replace: true })
         } catch (err) {
             console.log(err)
             toast.error(err?.message)
         }
     }
 
-    // Email Password Signin
+    // Email Password Sign in
     const handleSignIn = async e => {
         e.preventDefault()
         const form = e.target
@@ -39,10 +47,15 @@ const Login = () => {
         console.log({ email, pass })
         try {
             //User Login
-            const result = await signIn(email, pass)
-            console.log(result)
-            navigate(from, { replace: true })
-            toast.success('Signin Successful')
+            const result = await googleLogin()
+            // console.log(result.user);
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, { email: result.user?.email },
+                { withCredentials: true })
+            if (result.user) {
+                navigate(from, { replace: true })
+            }
+            console.log(data);
+            toast.success('Sign in Successful')
         } catch (err) {
             console.log(err)
             toast.error(err?.message)

@@ -1,15 +1,15 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import bgImg from '../../assets/images/register.jpg'
 import logo from '../../assets/images/logo.png'
-import { useContext } from 'react'
 import toast from 'react-hot-toast'
-import { AuthContext } from '../../Context/AuthProvider'
+import axios from 'axios'
+import useAuth from '../../Hooks/useAuth'
 const Registration = () => {
   const location = useLocation();
   const from = location?.state;
   const navigate = useNavigate()
-  const { googleLogin, createUser, updateUserProfile, user, setUser, isLoading } = useContext(AuthContext);
-  if(user) {
+  const { googleLogin, createUser, updateUserProfile, user, setUser, isLoading } = useAuth();
+  if (user) {
     navigate('/')
   }
 
@@ -24,9 +24,16 @@ const Registration = () => {
     try {
       //2. User Registration
       const result = await createUser(email, pass)
-      console.log(result)
-      await updateUserProfile(name, photo)
-      setUser({ ...user, photoURL: photo, displayName: name })
+      console.log(result);
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, { email: result.user?.email },
+        { withCredentials: true })
+      if (result.user) {
+        navigate(from, { replace: true })
+      }
+      console.log(data);
+      await updateUserProfile(name, photo);
+      //optimistic ui update
+      setUser({ ...result?.user, photoURL: photo, displayName: name })
       toast.success('Sign up Successful');
       navigate(from, { replace: true })
     } catch (err) {
@@ -47,7 +54,7 @@ const Registration = () => {
     }
   }
 
-  if(user || isLoading) return
+  if (user || isLoading) return
   return (
     <div className='flex justify-center items-center min-h-[calc(100vh-306px)] my-12'>
       <div className='flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg  lg:max-w-4xl '>

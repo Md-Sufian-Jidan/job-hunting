@@ -1,11 +1,12 @@
-import { useContext, useEffect, useState } from 'react'
-import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { AuthContext } from '../Context/AuthProvider'
+import useAuth from '../Hooks/useAuth'
+import useAxiosSecure from '../Hooks/useAxiosSecure'
 
 const MyPostedJobs = () => {
-    const { user } = useContext(AuthContext)
+    const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
     const [jobs, setJobs] = useState([])
 
     useEffect(() => {
@@ -13,13 +14,13 @@ const MyPostedJobs = () => {
     }, [user])
 
     const getData = async () => {
-        const { data } = await axios(`${import.meta.env.VITE_API_URL}/jobs/${user?.email}`);
+        const { data } = await axiosSecure(`/jobs/${user?.email}`);
         setJobs(data);
-    }
+    };
 
     const handleDelete = async id => {
         try {
-            const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/job/${id}`)
+            const { data } = await axiosSecure.delete(`${import.meta.env.VITE_API_URL}/job/${id}`)
             console.log(data)
             toast.success('Delete Successful')
 

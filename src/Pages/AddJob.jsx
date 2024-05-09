@@ -1,13 +1,13 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import axios from 'axios'
-import { AuthContext } from '../Context/AuthProvider'
+import useAuth from '../Hooks/useAuth'
 
 const AddJob = () => {
-    const { user } = useContext(AuthContext);
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const [startDate, setStartDate] = useState(new Date());

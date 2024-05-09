@@ -1,15 +1,17 @@
-import { useContext } from 'react'
 import logo from '../assets/images/logo.png'
 import { Link, useNavigate } from 'react-router-dom'
-import { AuthContext } from '../Context/AuthProvider'
 import toast from 'react-hot-toast'
+import axios from 'axios'
+import useAuth from '../Hooks/useAuth'
 const Navbar = () => {
-    const { user, logOut } = useContext(AuthContext);
+    const { user, logOut } = useAuth();
     const navigate = useNavigate();
     const handleLogOut = async () => {
         try {
             const result = await logOut()
             console.log(result);
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/logout`, { withCredentials: true });
+            console.log(data);
             toast.success('User Log Out successfully')
             navigate('/')
         }
