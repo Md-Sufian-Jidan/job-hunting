@@ -12,7 +12,7 @@ const useAxiosSecure = () => {
     const navigate = useNavigate()
     // interceptors 
     axiosSecure.interceptors.response.use(res => {
-        console.log('app a asar somoy ami thami a  dekesi ki asa aitar vitor', res);
+        // console.log('app a asar somoy ami thami a  dekesi ki asa aitar vitor', res);
         return res;
     }, async err => {
         console.log('error from axios interceptor', err.response);

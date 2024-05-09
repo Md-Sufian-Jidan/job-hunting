@@ -2,29 +2,34 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 // import toast from 'react-hot-toast'
 import useAuth from '../Hooks/useAuth'
+import useAxiosSecure from '../Hooks/useAxiosSecure';
+import { useQuery } from '@tanstack/react-query';
 
 const BidRequests = () => {
-    // const { user, isLoading } = useContext(AuthContext)
-    const { user, isLoading } = useAuth();
+    const { user } = useAuth(); //isLoading
+    const axiosSecure = useAxiosSecure();
+    const getData = async () => {
+        const { data } = await axiosSecure(`/bid-requests/${user?.email}`);
+        console.log(data);
+        return data;
+    };
+
+    const { data: bids = [], isLoading, refetch, isError, error } = useQuery({
+        queryFn: () => getData(),
+        queryKey: ['bids']
+    })
+
     if (isLoading) {
         return <p className='text-5xl text-center'>Loading...</p>
     }
-    const [bids, setBids] = useState();
-    useEffect(() => {
-        getData()
-    }, [user])
+    if(isError || error)  console.log(error, isError);
 
-    const getData = async () => {
-        const { data } = await axios(`${import.meta.env.VITE_API_URL}/bid-requests/${user?.email}`);
-        setBids(data);
-        console.log(data);
-    };
     const handleStatus = async (id, prevStatus, status) => {
         if (prevStatus === status) {
             return console.log('sorry vai hobe na');
         }
         console.log(id, prevStatus, status);
-        const { data } = await axios.patch(`${import.meta.env.VITE_API_URL}/bid/${id}`, { status });
+        const { data } = await axiosSecure.patch(`/bid/${id}`, { status });
         console.log(data);
         getData();
     };
@@ -34,7 +39,7 @@ const BidRequests = () => {
             return console.log('sorry vai hobe na');
         }
         console.log(id, prevStatus, status);
-        const { data } = await axios.patch(`${import.meta.env.VITE_API_URL}/bid/${id}`, { status });
+        const { data } = await axiosSecure.patch(`/bid/${id}`, { status });
         console.log(data);
         getData();
     }
@@ -163,7 +168,7 @@ const BidRequests = () => {
                                                 </td>
                                                 <td className='px-4 py-4 text-sm whitespace-nowrap'>
                                                     <div className='flex items-center gap-x-6'>
-                                                        {/* Accept button : In Progress  */}
+                                                        {/* Accept button : In Progress */}
                                                         <button
                                                             onClick={() => handleStatus(bid._id, bid.status, 'In Progress')}
                                                             disabled={bid.status === 'Complete'}

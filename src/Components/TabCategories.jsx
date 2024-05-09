@@ -13,7 +13,8 @@ const TabCategories = () => {
             setJobs(data)
         };
         getData();
-    }, [])
+    }, []);
+    console.log(jobs);
     return (
         <Tabs>
             <div className='container px-6 py-10 mx-auto'>
