@@ -3,11 +3,14 @@ import axios from 'axios'
 // import toast from 'react-hot-toast'
 import useAuth from '../Hooks/useAuth'
 import useAxiosSecure from '../Hooks/useAxiosSecure';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 const BidRequests = () => {
     const { user } = useAuth(); //isLoading
     const axiosSecure = useAxiosSecure();
+    const queryClient = useQueryClient();
+
     const getData = async () => {
         const { data } = await axiosSecure(`/bid-requests/${user?.email}`);
         console.log(data);
@@ -16,33 +19,44 @@ const BidRequests = () => {
 
     const { data: bids = [], isLoading, refetch, isError, error } = useQuery({
         queryFn: () => getData(),
-        queryKey: ['bids']
+        queryKey: ['bids', user?.email]
+    });
+
+    const { mutateAsync } = useMutation({
+        mutationFn: async ({ id, status }) => {
+            const { data } = await axiosSecure.patch(`/bid/${id}`, { status });
+            console.log(data);
+        },
+        onSuccess: () => {
+            console.log('wow, data updated');
+            toast.success('updated')
+            //refresh ui for latest data
+            // refetch();
+
+            //kot-hin
+            queryClient.invalidateQueries({ queryKey: ['bids'] })
+        }
     })
-
-    if (isLoading) {
-        return <p className='text-5xl text-center'>Loading...</p>
-    }
-    if(isError || error)  console.log(error, isError);
-
     const handleStatus = async (id, prevStatus, status) => {
         if (prevStatus === status) {
-            return console.log('sorry vai hobe na');
+            return console.log('sorry vai hob-e na');
         }
-        console.log(id, prevStatus, status);
-        const { data } = await axiosSecure.patch(`/bid/${id}`, { status });
-        console.log(data);
-        getData();
+        mutateAsync({ id, status })
     };
     // handle reject function
     const handleReject = async (id, prevStatus, status) => {
         if (prevStatus === status) {
-            return console.log('sorry vai hobe na');
+            return console.log('sorry vai hob-e na');
         }
-        console.log(id, prevStatus, status);
-        const { data } = await axiosSecure.patch(`/bid/${id}`, { status });
-        console.log(data);
-        getData();
+        mutateAsync({ id, status })
     }
+
+    if (isLoading) {
+        return <p className='text-5xl text-center'>Loading...</p>
+    }
+
+    if (isError || error) console.log(error, isError);
+
     return (
         <section className='container px-4 mx-auto pt-12'>
             <div className='flex items-center gap-x-3'>

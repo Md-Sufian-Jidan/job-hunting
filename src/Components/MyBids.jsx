@@ -2,31 +2,33 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 // import toast from 'react-hot-toast'
 import useAuth from '../Hooks/useAuth';
+import useAxiosSecure from '../Hooks/useAxiosSecure';
 
 const MyBids = () => {
-  const {user , isLoading } = useAuth();
-  if (isLoading) {
-    return <p className='text-5xl text-center'>Loading...</p>
-  }
+  const { user, isLoading } = useAuth();
+  const axiosSecure = useAxiosSecure()
   const [bids, setBids] = useState();
-  useEffect(() => {
-    getData()
-  }, [user])
 
   const getData = async () => {
-    const { data } = await axios(`${import.meta.env.VITE_API_URL}/my-bids/${user?.email}`);
+    const { data } = await axiosSecure(`/my-bids/${user?.email}`);
     setBids(data);
     console.log(data);
   };
+  useEffect(() => {
+    getData()
+  }, [user])
   const handleComplete = async (id, status) => {
     // if (prevStatus === status) {
     //   return console.log('sorry vai hob e na');
     // }
     console.log(id, status);
-    const { data } = await axios.patch(`${import.meta.env.VITE_API_URL}/bid/${id}`, { status });
+    const { data } = await axiosSecure.patch(`/bid/${id}`, { status });
     console.log(data);
     getData();
   };
+  if (isLoading) {
+    return <p className='text-5xl text-center'>Loading...</p>
+  }
   return (
     <section className='container px-4 mx-auto pt-12'>
       <div className='flex items-center gap-x-3'>

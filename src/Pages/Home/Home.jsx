@@ -8,7 +8,7 @@ const Home = () => {
     // const jobs = useLoaderData();
     // console.log(jobs);
     if (isLoading) {
-        return <p className="text-7xl">Loading...</p>
+        return <p className="text-7xl text-center my-10">Loading...</p>
     }
     return (
         <div>
